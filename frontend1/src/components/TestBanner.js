@@ -54,10 +54,14 @@ export default function Banner() {
   useEffect(() => {
     axios.get(urls.trending)
       .then(res => {
-        setMovies(res.data.data.slice(0, 3));
+        let moviesArr = [];
+        for(let x in res.data.data) {
+          moviesArr.push(res.data.data[x]);
+        }
+        setMovies(moviesArr.slice(0, 3));
       })
       .catch(error => console.log(error));
-  }, [setMovies]);
+  }, []);
 
   const settings = {
     dots: true,
@@ -73,8 +77,7 @@ export default function Banner() {
     <div>
       <Slider {...settings}>
         {movies.map((movie, idx) => {
-          // console.log(movie);
-          return <Details year={movie.created_on} genre={movie.genre} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review} link={movie.public_id} />
+          return <Details year={movie.created_on} genre={movie.genre.name} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review} link={movie.public_id} />
         })}
       </Slider>
     </div>

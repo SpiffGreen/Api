@@ -115,7 +115,7 @@ const Watch = (props) => {
   const { match, location } = props;
   // console.log(match.params.movie_id);
   const u_id = match.params.movie_id;
-  const movie_name = location.state.name;
+  // const movie_name = location.state.name;
   // const [data, setData] = useState({});
   // useEffect(() => {
   //   function fetchDetail() {
@@ -144,18 +144,18 @@ const Watch = (props) => {
                 className="theShow"
               /> */}
               <video 
-                poster={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}.jpg`}
+                // poster={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}.jpg`}
                 autoPlay={true}
                 controls={true}
                 className="theShow"
               >
-                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/webm"/>
+                {/* <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/webm"/>
                 <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/mp4"/>
-                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/ogg"/>
+                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/ogg"/> */}
               </video>
             </div>
             <div className="actions">
-              <p className="title">{movie_name}</p>
+              {/* <p className="title">{movie_name}</p> */}
               <div className="btns">
                 <div>
                   <FaHeart className="icons" /> <br />

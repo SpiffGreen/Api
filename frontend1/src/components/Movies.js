@@ -154,7 +154,9 @@ const Movies = () => {
     let movie_review = elem.attributes["data-movie-review"].value;
     let movie_director = elem.attributes["data-movie-director"].value;
     let movie_year = elem.attributes["data-movie-year"].value;
-
+    let movie_uid = elem.attributes["data-movie-uid"].value;
+    // console.log(movie_uid);
+    // debugger;
     // console.log(elem);
     updateState((n) => {
       return {
@@ -162,7 +164,8 @@ const Movies = () => {
         details: {
           top: elem.offsetTop,
           left: elem.offsetLeft,
-          u_id: movie_id,
+          movie_id,
+          u_id: movie_uid,
           title: movie_name,
           desc: movie_desc,
           genre: movie_genre,
@@ -405,6 +408,7 @@ const Movies = () => {
               data-movie-review={i.review}
               data-movie-director={i.creator}
               data-movie-year={i.created_on}
+              data-movie-uid={i.public_id}
               onClick={showDetails}
             >
               <MovieCard title={i.name} like={i.thumbs_up} viewed={i.popular} />
