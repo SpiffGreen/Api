@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../AuthContext";
 import { Link, Redirect } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -33,6 +34,8 @@ function Signup() {
     password2: "",
     number: "",
   });
+
+  const { isAuthenticated } = useContext(AuthContext);
   
   const [registered, setRegistered] = useState(false);
   
@@ -140,7 +143,7 @@ function Signup() {
   const [count, setCount] = useState(1);
   return (
     <div className="sign-body">
-      {registered ? <Redirect to="/signin" /> : null}
+      {isAuthenticated.token ? <Redirect to="/" /> : null}
       <Nav />
       <div className="main">
         <form onSubmit={submit}>

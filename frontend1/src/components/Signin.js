@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
-import { MovieContext } from "../MovieContext";
+// import { MovieContext } from "../MovieContext";
+import { AuthContext } from "../AuthContext";
 import { Link, Redirect } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import "../styles/Signin.css";
 import axios from "axios";
 import urls from "../apiEndPoints";
-// import RouteProtect from "./RouteProtect";
 
 const Nav = () => {
   return (
@@ -30,7 +30,7 @@ function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember] = useState(true);
-  const [state, updateState] = useContext(MovieContext);
+  const {isAuthenticated, setAuth} = useContext(AuthContext);
 
   
   const updateEmail = (e) => {
@@ -57,13 +57,13 @@ function Signin() {
           // Store token in local storage
           localStorage.setItem("token", data.data.token);
           // console.log(localStorage.getItem("token"));
-          updateState(n => {
+          setAuth(n => {
             return {
               ...n,
-              logged_in: true
-            };
-          });
-          console.log(state);
+              token: data.data.token
+            }
+          })
+          console.log(isAuthenticated);
         } else {
         // update UI telling user that login failed.
         console.log("Resquest went through but returned: ", res);
@@ -77,8 +77,7 @@ function Signin() {
 
   return (
     <div className="sign-body">
-      {/* <RouteProtect /> */}
-      {state.logged_in ? <Redirect to="/" /> : null}
+      {isAuthenticated.token ? <Redirect to="/" /> : null}
       <Nav />
       <div className="main">
         {count === 1 ? (
