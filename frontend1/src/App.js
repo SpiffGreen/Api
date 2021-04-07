@@ -29,6 +29,12 @@ class App extends Component {
                 <PrivateRoute path="/watch/:movie_id" exact={true} component={Watch} />
                 <PrivateRoute path="/user" exact={true} component={User} />
                 <PrivateRoute path="/movies" exact={true} component={MoviesRoute} />
+
+                {/* <Route path="/" exact={true} component={Home} />
+                <Route path="/watch/:movie_id" exact={true} component={Watch} />
+                <Route path="/user" exact={true} component={User} />
+                <Route path="/movies" exact={true} component={MoviesRoute} /> */}
+
                 <Route path="/signin" exact={true} component={Signin} />
                 <Route path="/signup" exact={true} component={Signup} />
                 <Route path="/:unknown" exact={true} component={NotFoundPage} />

@@ -224,6 +224,11 @@
     width: 100%;
   }
 
+  .sign-body .main .signin-form .sign-sub-btn {
+    min-height: 40px !important;
+    padding: 3px 0 !important;
+  }
+
   .sign-body .main .center > p {
     transform: scale(0.9);
     line-height: 28px;

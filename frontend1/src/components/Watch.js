@@ -45,6 +45,7 @@ const SimilarMovies = ({ u_id }) => {
   useEffect(() => {
     const GetSimilarMovies = async (u_id) => {
       let similarMovies = [];
+      console.log(u_id);
       try {
         const res = await axios.get(
           `https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`
@@ -53,11 +54,12 @@ const SimilarMovies = ({ u_id }) => {
         // set the value of similarMovies variable to the response
         setMovies(similarMovies);
       } catch (err) {
-        console.log(err);
+        console.log("Sorry can't fetch similar movies now", err);
       }
     };
-    GetSimilarMovies();
-  }, [movies, u_id]);
+    GetSimilarMovies(u_id);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="recommended">
@@ -111,25 +113,23 @@ const SimilarMovies = ({ u_id }) => {
   );
 };
 
-const Watch = (props) => {
-  const { match, location } = props;
+const Watch = ({ match }) => {
   // console.log(match.params.movie_id);
   const u_id = match.params.movie_id;
-  // const movie_name = location.state.name;
-  // const [data, setData] = useState({});
-  // useEffect(() => {
-  //   function fetchDetail() {
-  //     axios.get(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`)
-  //       .then(res => console.log(res))
-  //       .catch(err => console.log("Sorry, can't fetch movie detail!"));
-  //   }
-  //   fetchDetail();
-  // }, []);
+  const [data, setData] = useState({});
+  useEffect(() => {
+    function fetchDetail() {
+      axios.get(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`)
+        .then(res => {
+          setData(res.data);
+        })
+        .catch(err => console.log("Sorry, can't fetch movie detail!"));
+    }
+    fetchDetail();
+    // eslint-disable-next-line
+  }, []);
   return (
     <div className="watch">
-      {/* {
-        !data.logged_in ? <Redirect to="/signin" /> : null
-      } */}
       <AppNavBar />
       <div className="watch-body">
         <div className="movieShow">

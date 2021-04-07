@@ -96,7 +96,10 @@ function Signin() {
                 value={email}
                 onChange={updateEmail}
               />
-              <button onClick={() => setCount(count + 1)}>
+              <button 
+                className="sign-sub-btn"
+                onClick={() => setCount(count + 1)}
+              >
                 <FaArrowRight size={24} color="var(--font-color)" />
               </button>
             </div>
@@ -122,10 +125,11 @@ function Signin() {
                 maxLength={16}
                 value={password}
                 onChange={updatePassword}
-              /><br />
+              />
               
               <button
-                style={{ fontSize: "22px", color: "var(--font-color)" }}
+                className="sign-sub-btn"
+                style={{ fontSize: "22px", color: "var(--font-color)"}}
                 onClick={submit}
               >
                 Login

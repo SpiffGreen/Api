@@ -1,15 +1,16 @@
 import React, { useContext, useState, createRef } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, Redirect } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
+import { AuthContext } from "../AuthContext";
 import { FaSearch, FaAngleDown, FaBell, FaArrowLeft, FaAngleRight, FaMixcloud } from "react-icons/fa";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { MdMovie } from "react-icons/md";
 import { AiFillDatabase } from "react-icons/ai";
 import Friend from "./Friend";
-// import axios from "axios";
+import axios from "axios";
 // import urls from "../apiEndPoints";
 
 // Bring in img for testing purpose
@@ -26,33 +27,13 @@ const UserAvatar = (props) => {
   );
 };
 
-const AppNavBar = () => {
+const AppNavBar = (props) => {
   const [appState, setAppState] = useContext(MovieContext);
+  const {setAuth} = useContext(AuthContext);
   const [navOpen, setNavOpen] = useState(false);
   const [turn, setTurn] = useState(false);
-  // const [logged_in, setLogged] = useState(false);
+  const [redirect, setRedirect] = useState(false);
   const burger = createRef();
-
-  // Check and store logged in
-  // useEffect(() => {
-  //   function fetchData() {
-  //     axios.get(urls.all)
-  //       .then(res => {
-  //         console.log(res);
-  //         setLogged(res.data["logged in"]);
-  //         console.log(res.data["logged in"]);
-  //         setAppState(n => {
-  //           return {
-  //             ...n,
-  //             logged_in: res.data["logged in"],
-  //             user_name: res.data["name"] ? res.data["name"] : ""
-  //           }
-  //         })
-  //       })
-  //       .catch(() => console.log("Something went wrong!"));
-  //   }
-  //   fetchData();
-  // }, []);
 
   // Helper functions
   function openFindFriends() {
@@ -88,10 +69,11 @@ const AppNavBar = () => {
     e.stopPropagation();
     setNavOpen(true);
   }
+
+  if(redirect) return <Redirect to="/signin" />
   
   return (
     <nav className="navbar">
-      {/* { !logged_in ? <Redirect to="/signin" /> : null} */}
       <div
         className="find-friends"
         style={appState.friendsDisplay ? friendDisplay2 : friendDisplay1}
@@ -218,12 +200,12 @@ const AppNavBar = () => {
               <TiArrowSortedDown onClick={() => setTurn(n => !n)} className="nav-arrows movie-arrow" style={{ "transform": turn ? "scaleY(-1)" : "scaleY(1)" }}/>
               <div className="other" style={{display: !turn ? "none" : "block"}}>
                 <Link to="/movies"><p className="active-mobile"><MdMovie className="icons" />Movies</p></Link>
-                <Link><p><AiFillDatabase className="icons" /> Series</p></Link>
-                <Link><p><FaMixcloud className="icons" /> Live</p></Link>
+                <Link to="/"><p><AiFillDatabase className="icons" /> Series</p></Link>
+                <Link to="/"><p><FaMixcloud className="icons" /> Live</p></Link>
               </div>
             </div>
 
-            <Link>
+            <Link to="/">
               <div className="My List">
                 <div className="details">
                   <h3>My List</h3>
@@ -233,7 +215,7 @@ const AppNavBar = () => {
               </div>
             </Link>
 
-            <Link>
+            <Link to="/">
               <div className="Settings">
                 <div className="details">
                   <h3>Settings</h3>
@@ -243,7 +225,7 @@ const AppNavBar = () => {
               </div>
             </Link>
 
-            <Link>
+            <Link to="/">
               <div className="Friend Request">
                 <div className="details">
                   <h3>Friend Request</h3>
@@ -253,13 +235,44 @@ const AppNavBar = () => {
               </div>
             </Link>
 
-            <Link>
+            {/* <Link>
               <div className="Messages">
                 <div className="details">
                   <h3>Messages</h3>
                   <p>Write messages to friends</p>
                 </div>
               <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link> */}
+
+            <Link to="/" onClick={(e) => {
+              e.preventDefault();
+              // make logout request
+              // if successfull clear storage and redirect
+              localStorage.clear();
+              setAuth({token: localStorage.getItem("token")});
+              // props.history.push("/signin");
+              setRedirect(true);
+              axios.post("/api/logout", {
+                
+              }, {
+                headers: {
+                  "Content-Type": "application/json",
+                }
+              })
+                .then(res => console.log(res.data))
+                .catch(() => console.log("Logout failed"));
+              
+              // else sweet alert logout failed.
+              alert("You logged out");
+              console.log("Hello");
+            }}>
+              <div className="Logout">
+                <div className="details">
+                  <h3>Logout</h3>
+                  <p>Sign out of your account</p>
+                </div>
+              <FaAngleRight className="nav-arrows" style={{display: "none"}}/>
               </div>
             </Link>
           </div>

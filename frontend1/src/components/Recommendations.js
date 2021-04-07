@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Recommendations.css";
 import MovieCard from "./MovieCard";
-// import Carousel from "react-elastic-carousel";
-// import Joker from "../joker_movie.jpg";
 import axios from "axios";
 
 // Import styles
@@ -63,11 +61,23 @@ const Recommendations = (props) => {
   const [movies, setMovies] = useState([]);
   useEffect(() => {
     function fetchRecommended() {
-      axios.get("https://movie-stream-api.herokuapp.com/api/choice")
+      axios.get("https://movie-stream-api.herokuapp.com/api/choice", {
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Max-Age": -1,
+          "Cache-Control": "no-cache",
+          "Authorization": localStorage.getItem("token")
+        }
+      })
+      // fetch("https://movie-stream-api.herokuapp.com/api/choice")
         .then(res => {
-          console.log(res.data);
-          setMovies(res.data.data);
+          console.log(res);
+          // setMovies(res.data.data);
         })
+        .catch(err => console.log("Coundn't fetch choices, sorry", err));
     }
     fetchRecommended();
   }, []);

@@ -23,7 +23,7 @@ const Nav = () => {
   );
 }
 
-function Signup() {
+function Signup(props) {
   const [form, updateForm] = useState({
     firstName: "",
     lastName: "",
@@ -131,13 +131,13 @@ function Signup() {
         console.log(res);
         if(res.data.status === "success") {
           setRegistered(true);
+          props.history.push("/signin");
         }
       })
       .catch(err => {
         console.log("Signup attempt failed\n", err);
         // Update UI telling user registration failed
       })
-
   }
 
   const [count, setCount] = useState(1);

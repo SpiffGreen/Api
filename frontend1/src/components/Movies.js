@@ -194,11 +194,15 @@ const Movies = () => {
 
   const showMovies = () => {
     setSet(1);
-    axios.get("https://movie-stream-api.herokuapp.com/api/choice")
-      .then(res => {
-        setMovieState(res.data.data);
-      })
-      .catch(err => console.log("Failed fetcing movies"));
+    // axios.get("https://movie-stream-api.herokuapp.com/api/choice", {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   }
+    // })
+    //   .then(res => {
+    //     setMovieState(res.data.data);
+    //   })
+    //   .catch(err => console.log("Failed fetcing movies"));
   };
 
   const showPopular = () => {
