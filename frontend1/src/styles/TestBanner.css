@@ -40,10 +40,20 @@ ul.slick-dots {
 /* Details Styling */
 .details {
   background-position: top;
+<<<<<<< HEAD
+=======
+  /* background-size: cover; */
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   background-size: 100% 150%;
   background-repeat: no-repeat;
   width: 100%;
   height: calc(100vh - 0.1rem);
+}
+.details .main-details:hover {
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 25px;
+  border-radius: 8px;
 }
 .details .main-details {
   position: relative;

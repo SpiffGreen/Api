@@ -96,7 +96,7 @@ const Movies = () => {
       left: state.details.left,
     };
     const bg = {
-      background: `url("https://res.cloudinary.com/du05mneox/image/upload/${state.details.title}.jpg")`,
+      background: `url("https://res.cloudinary.com/dymhlpm8a/image/upload/${state.details.title}.jpg")`,
       // background: `url(${Joker})`,
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -194,6 +194,7 @@ const Movies = () => {
 
   const showMovies = () => {
     setSet(1);
+<<<<<<< HEAD
     // axios.get("https://movie-stream-api.herokuapp.com/api/choice", {
     //   headers: {
     //     "Content-Type": "application/json",
@@ -203,6 +204,15 @@ const Movies = () => {
     //     setMovieState(res.data.data);
     //   })
     //   .catch(err => console.log("Failed fetcing movies"));
+=======
+    axios.post("https://movie-stream-api.herokuapp.com/api/choice", {
+      "token": localStorage.getItem("token"),
+    })
+      .then(res => {
+        setMovieState(res.data.data);
+      })
+      .catch(err => console.log("Failed fetcing movies"));
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   };
 
   const showPopular = () => {
@@ -225,7 +235,9 @@ const Movies = () => {
 
   const showoPremieres = () => {
     setSet(4);
-    axios.get("https://movie-stream-api.herokuapp.com/api/")
+    axios.post("https://movie-stream-api.herokuapp.com/api/", {
+      "token": localStorage.getItem("token")
+    })
       .then(res => {
         setMovieState(res.data.data);
       })

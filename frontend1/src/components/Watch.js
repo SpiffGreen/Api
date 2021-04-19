@@ -39,6 +39,7 @@ import axios from "axios";
 //   );
 // };
 
+<<<<<<< HEAD
 const SimilarMovies = ({ u_id }) => {
   // fetch data from api using u_id
   const [movies, setMovies] = useState([]);
@@ -128,6 +129,63 @@ const Watch = ({ match }) => {
     fetchDetail();
     // eslint-disable-next-line
   }, []);
+=======
+const Watch = (props) => {
+  const { match, location } = props;
+  console.log("This is the movie_id: ", match.params.movie_id);
+  const u_id = match.params.movie_id;
+  // debugger;
+  const [movie_name, setMovieName] = useState("");
+  const [movie_id, setMovieId] = useState("");
+  const [likes, setLikes] = useState(0);
+  const [views, setViews] = useState(0);
+  // const [data, setData] = useState({});
+  useEffect(() => {
+    function fetchDetail() {
+      axios.post(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`, {
+        "token": localStorage.getItem("token"),
+      })
+        .then(res => {
+          console.log(res.data);
+          setMovieName(res.data.data.name);
+          setMovieId(res.data.data.public_id);
+          setLikes(res.data.data.thumbs_up);
+          setViews(res.data.data.popular);
+        })
+        .catch(err => console.log("Sorry, can't fetch movie detail!", err));
+    }
+    fetchDetail();
+  }, []);
+
+  const SimilarMovies = () => {
+    // fetch data from api using u_id
+    // console.log("Props Id: " + props.id);
+    const [movies, setMovies] = useState([]);
+    const [movie_length, setMoviesLength] = useState(0);
+    useEffect(() => {
+      const GetSimilarMovies = async () => {
+        try {
+          const res = await axios.get("https://movie-stream-api.herokuapp.com/api/similar/movie/"+ movie_id);
+          console.log("Similar Movies: ", res);
+          // set the value of similarMovies variable to the response
+          setMovies(res.data.data);
+          setMoviesLength(res.data.data.length);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      GetSimilarMovies();
+    }, []);
+  
+    return <div className="recommended">
+            {/* <p className="title">{ movies.length != 0 ? "You might also like" : null }</p> */}
+            <div className="show">
+              {/* {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />)} */}
+            </div>
+          </div>
+  };
+
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   return (
     <div className="watch">
       <AppNavBar />
@@ -144,14 +202,24 @@ const Watch = ({ match }) => {
                 className="theShow"
               /> */}
               <video 
+<<<<<<< HEAD
                 // poster={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}.jpg`}
+=======
+                poster={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}.jpg`}
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
                 autoPlay={true}
                 controls={true}
                 className="theShow"
               >
+<<<<<<< HEAD
                 {/* <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/webm"/>
                 <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/mp4"/>
                 <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/ogg"/> */}
+=======
+                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/webm"/>
+                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/mp4"/>
+                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/ogg"/>
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
               </video>
             </div>
             <div className="actions">
@@ -159,11 +227,11 @@ const Watch = ({ match }) => {
               <div className="btns">
                 <div>
                   <FaHeart className="icons" /> <br />
-                  <span>10 Likes</span>
+                  <span>{likes}</span>
                 </div>
                 <div>
                   <FaEye className="icons" /> <br />
-                  <span>60m Views</span>
+                  <span>{views}</span>
                 </div>
                 <div>
                   <FaPlus className="icons" /> <br />
@@ -181,6 +249,9 @@ const Watch = ({ match }) => {
                   <FaStar />
                 </div>
               </div>
+          </div>
+          <div>
+            Hello world
           </div>
         </div>
         <div className="others">
@@ -205,7 +276,7 @@ const Watch = ({ match }) => {
               </div>
           </div> */}
         </div>
-        <SimilarMovies u_id={u_id} />
+        <SimilarMovies />
       </div>
       <SubcribeLayout />
       <Footer />

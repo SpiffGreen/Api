@@ -16,6 +16,7 @@ import axios from "axios";
 // Bring in img for testing purpose
 import Joker from "../joker_movie.jpg";
 import User from "../user.jpg";
+import axios from "axios";
 
 const UserAvatar = (props) => {
   return (
@@ -35,6 +36,44 @@ const AppNavBar = (props) => {
   const [redirect, setRedirect] = useState(false);
   const burger = createRef();
 
+<<<<<<< HEAD
+=======
+  const logout = () => {
+    axios.post("movie-stream-api.herokuapp.com", {
+      "token": localStorage.getItem("token")
+    })
+    .then(res => {
+      // Update storage
+      localStorage.removeItem("token");
+      props.history.push("/signin");
+    })
+    .catch(err => {
+      // Update UI reporting failure to logout
+    })
+  }
+
+  // Check and store logged in
+  // useEffect(() => {
+  //   function fetchData() {
+  //     axios.get(urls.all)
+  //       .then(res => {
+  //         console.log(res);
+  //         setLogged(res.data["logged in"]);
+  //         console.log(res.data["logged in"]);
+  //         setAppState(n => {
+  //           return {
+  //             ...n,
+  //             logged_in: res.data["logged in"],
+  //             user_name: res.data["name"] ? res.data["name"] : ""
+  //           }
+  //         })
+  //       })
+  //       .catch(() => console.log("Something went wrong!"));
+  //   }
+  //   fetchData();
+  // }, []);
+
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   // Helper functions
   function openFindFriends() {
     setAppState((prevState) => ({ ...prevState, friendsDisplay: true }));
@@ -235,11 +274,16 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
+<<<<<<< HEAD
             {/* <Link>
               <div className="Messages">
+=======
+            <Link>
+              <div className="Logout" onClick={logout}>
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
                 <div className="details">
-                  <h3>Messages</h3>
-                  <p>Write messages to friends</p>
+                  <h3>Logout</h3>
+                  <p>Sign out</p>
                 </div>
               <FaAngleRight className="nav-arrows"/>
               </div>
@@ -293,3 +337,4 @@ const AppNavBar = (props) => {
 };
 
 export default AppNavBar;
+

@@ -53,6 +53,7 @@ function Signin() {
     axios.post(urls.login, body)
       .then(res => {
         const data = res.data;
+<<<<<<< HEAD
         if(data.status === "success") {
           // Store token in local storage
           localStorage.setItem("token", data.token);
@@ -70,6 +71,17 @@ function Signin() {
         // console.log(data.token);
         localStorage.setItem("token", data.token);
         }
+=======
+        console.log(data);
+        localStorage.setItem("token", data.token);
+        updateState(n => {
+          return {
+            ...n,
+            logged_in: true
+          };
+        });
+        console.log(state);
+>>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
       })
       .catch(err => {
         // update UI telling user that login failed.
