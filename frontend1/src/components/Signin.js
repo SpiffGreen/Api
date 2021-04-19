@@ -55,18 +55,20 @@ function Signin() {
         const data = res.data;
         if(data.status === "success") {
           // Store token in local storage
-          localStorage.setItem("token", data.data.token);
+          localStorage.setItem("token", data.token);
           // console.log(localStorage.getItem("token"));
           setAuth(n => {
             return {
               ...n,
-              token: data.data.token
+              token: data.token
             }
           })
           console.log(isAuthenticated);
         } else {
         // update UI telling user that login failed.
         console.log("Resquest went through but returned: ", res);
+        // console.log(data.token);
+        localStorage.setItem("token", data.token);
         }
       })
       .catch(err => {
