@@ -1,16 +1,15 @@
-import React, { useContext, useState, createRef } from "react";
-import { NavLink, Link, Redirect } from "react-router-dom";
+import React, { useContext, useState, createRef, useEffect } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
-import { AuthContext } from "../AuthContext";
 import { FaSearch, FaAngleDown, FaBell, FaArrowLeft, FaAngleRight, FaMixcloud } from "react-icons/fa";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { MdMovie } from "react-icons/md";
 import { AiFillDatabase } from "react-icons/ai";
 import Friend from "./Friend";
-import axios from "axios";
+// import axios from "axios";
 // import urls from "../apiEndPoints";
 
 // Bring in img for testing purpose
@@ -30,14 +29,20 @@ const UserAvatar = (props) => {
 
 const AppNavBar = (props) => {
   const [appState, setAppState] = useContext(MovieContext);
-  const {setAuth} = useContext(AuthContext);
   const [navOpen, setNavOpen] = useState(false);
   const [turn, setTurn] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [persons, setPersons] = useState([]);
   const burger = createRef();
 
-<<<<<<< HEAD
-=======
+  useEffect(() => {
+    axios("https://movie-stream-api.herokuapp.com/api/users")
+      .then(res => {
+        console.log(res.data);
+        setPersons(res.data);
+      })
+      .catch(() => console.log("Couldn't Get Persons"));
+  } ,[])
+
   const logout = () => {
     axios.post("movie-stream-api.herokuapp.com", {
       "token": localStorage.getItem("token")
@@ -49,31 +54,10 @@ const AppNavBar = (props) => {
     })
     .catch(err => {
       // Update UI reporting failure to logout
+      alert("logout failed!");
     })
   }
 
-  // Check and store logged in
-  // useEffect(() => {
-  //   function fetchData() {
-  //     axios.get(urls.all)
-  //       .then(res => {
-  //         console.log(res);
-  //         setLogged(res.data["logged in"]);
-  //         console.log(res.data["logged in"]);
-  //         setAppState(n => {
-  //           return {
-  //             ...n,
-  //             logged_in: res.data["logged in"],
-  //             user_name: res.data["name"] ? res.data["name"] : ""
-  //           }
-  //         })
-  //       })
-  //       .catch(() => console.log("Something went wrong!"));
-  //   }
-  //   fetchData();
-  // }, []);
-
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   // Helper functions
   function openFindFriends() {
     setAppState((prevState) => ({ ...prevState, friendsDisplay: true }));
@@ -108,11 +92,10 @@ const AppNavBar = (props) => {
     e.stopPropagation();
     setNavOpen(true);
   }
-
-  if(redirect) return <Redirect to="/signin" />
   
   return (
     <nav className="navbar">
+      {/* { !logged_in ? <Redirect to="/signin" /> : null} */}
       <div
         className="find-friends"
         style={appState.friendsDisplay ? friendDisplay2 : friendDisplay1}
@@ -133,7 +116,8 @@ const AppNavBar = (props) => {
         </div>
 
         <div className="friend-results">
-          <Friend
+          {persons && persons.map((i, idx) => (<Friend avatar={Joker} name={i.name} status={true} title={i.country} />))}
+          {/* <Friend
             avatar={Joker}
             name="Nonso"
             status={true}
@@ -150,7 +134,7 @@ const AppNavBar = (props) => {
             name="Anita"
             status={false}
             into="Actions, thriller, Horror"
-          />
+          /> */}
         </div>
       </div>
       <div className="top-bar">
@@ -239,12 +223,12 @@ const AppNavBar = (props) => {
               <TiArrowSortedDown onClick={() => setTurn(n => !n)} className="nav-arrows movie-arrow" style={{ "transform": turn ? "scaleY(-1)" : "scaleY(1)" }}/>
               <div className="other" style={{display: !turn ? "none" : "block"}}>
                 <Link to="/movies"><p className="active-mobile"><MdMovie className="icons" />Movies</p></Link>
-                <Link to="/"><p><AiFillDatabase className="icons" /> Series</p></Link>
-                <Link to="/"><p><FaMixcloud className="icons" /> Live</p></Link>
+                <Link><p><AiFillDatabase className="icons" /> Series</p></Link>
+                <Link><p><FaMixcloud className="icons" /> Live</p></Link>
               </div>
             </div>
 
-            <Link to="/">
+            <Link>
               <div className="My List">
                 <div className="details">
                   <h3>My List</h3>
@@ -254,7 +238,7 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-            <Link to="/">
+            <Link>
               <div className="Settings">
                 <div className="details">
                   <h3>Settings</h3>
@@ -264,7 +248,7 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-            <Link to="/">
+            <Link>
               <div className="Friend Request">
                 <div className="details">
                   <h3>Friend Request</h3>
@@ -274,49 +258,13 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-<<<<<<< HEAD
-            {/* <Link>
-              <div className="Messages">
-=======
             <Link>
               <div className="Logout" onClick={logout}>
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
                 <div className="details">
                   <h3>Logout</h3>
                   <p>Sign out</p>
                 </div>
               <FaAngleRight className="nav-arrows"/>
-              </div>
-            </Link> */}
-
-            <Link to="/" onClick={(e) => {
-              e.preventDefault();
-              // make logout request
-              // if successfull clear storage and redirect
-              localStorage.clear();
-              setAuth({token: localStorage.getItem("token")});
-              // props.history.push("/signin");
-              setRedirect(true);
-              axios.post("/api/logout", {
-                
-              }, {
-                headers: {
-                  "Content-Type": "application/json",
-                }
-              })
-                .then(res => console.log(res.data))
-                .catch(() => console.log("Logout failed"));
-              
-              // else sweet alert logout failed.
-              alert("You logged out");
-              console.log("Hello");
-            }}>
-              <div className="Logout">
-                <div className="details">
-                  <h3>Logout</h3>
-                  <p>Sign out of your account</p>
-                </div>
-              <FaAngleRight className="nav-arrows" style={{display: "none"}}/>
               </div>
             </Link>
           </div>

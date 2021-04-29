@@ -1,0 +1,34 @@
+# FILBA API TEST FILE
+@contentType = application/json
+@authToken = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwibmFtZSI6IlNwaWZmICBKZWtleS1HcmVlbiIsImV4cCI6MTYzNTgxNDI5MCwiZW1haWwiOiJzcGlmZmpnQGdtYWlsLmNvbSJ9.vwdwcJchc71LMrugmKtVJ110vDgRtSSXfJ_7l_wSD70
+
+# @desc   GET THE USERS
+# @auth   no-auth
+# @method GET
+GET https://movie-stream-api.herokuapp.com/api/users HTTP/1.1
+
+###
+
+# @desc   LIST FRIENDS
+# @auth   required
+# @method POST
+POST https://movie-stream-api.herokuapp.com/api/my/friends HTTP/1.1
+content-type: {{contentType}}
+
+{
+  "token": "{{authToken}}"
+}
+
+###
+
+# @desc   ADD FRIENDS
+# @auth   required
+# @method POST
+POST https://movie-stream-api.herokuapp.com/api/add/friend/Nicholas%20%20Ovunda%20 HTTP/1.1
+content-type: {{contentType}}
+
+{
+  "token": "{{authToken}}"
+}
+
+###

@@ -3,12 +3,12 @@ import "../styles/Watch.css";
 import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
 import Footer from "./Footer";
-// import Joker from "../joker_movie.jpg";
+import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
 // import ReactPlayer from "react-player";
-import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
-// import { MdPlaylistAdd } from "react-icons/md";
-
+import { FaEye, FaHeart, FaPlus, FaStar, FaArrowLeft } from "react-icons/fa";
+import logo from "../video-camera.svg";
+import io from "socket.io-client";
 
 import axios from "axios";
 // import { GoPrimitiveDot } from "react-icons/go";
@@ -27,118 +27,20 @@ import axios from "axios";
 //   );
 // };
 
-// const Friend = ({ pic, name, address }) => {
-//   return (
-//     <div className="friend">
-//       <img src={pic} alt="." />
-//       <div className="detail">
-//         <h3>{name}</h3>
-//         <p>{address}</p>
-//       </div>
-//     </div>
-//   );
-// };
 
-<<<<<<< HEAD
-const SimilarMovies = ({ u_id }) => {
-  // fetch data from api using u_id
-  const [movies, setMovies] = useState([]);
-  useEffect(() => {
-    const GetSimilarMovies = async (u_id) => {
-      let similarMovies = [];
-      console.log(u_id);
-      try {
-        const res = await axios.get(
-          `https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`
-        );
-        console.log(res);
-        // set the value of similarMovies variable to the response
-        setMovies(similarMovies);
-      } catch (err) {
-        console.log("Sorry can't fetch similar movies now", err);
-      }
-    };
-    GetSimilarMovies(u_id);
-    // eslint-disable-next-line
-  }, []);
-
-  return (
-    <div className="recommended">
-      <p className="title">You might also like</p>
-      <div className="show">
-        {/* <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        />
-        <MovieCard
-          title="The Lord"
-          liked={false}
-          viewed={false}
-          adPic={Joker}
-        /> */}
-        {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} viewed={i.viewed} />)}
-      </div>
-    </div>
-  );
-};
-
-const Watch = ({ match }) => {
-  // console.log(match.params.movie_id);
-  const u_id = match.params.movie_id;
-  const [data, setData] = useState({});
-  useEffect(() => {
-    function fetchDetail() {
-      axios.get(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`)
-        .then(res => {
-          setData(res.data);
-        })
-        .catch(err => console.log("Sorry, can't fetch movie detail!"));
-    }
-    fetchDetail();
-    // eslint-disable-next-line
-  }, []);
-=======
 const Watch = (props) => {
-  const { match, location } = props;
+  const { match } = props;
   console.log("This is the movie_id: ", match.params.movie_id);
   const u_id = match.params.movie_id;
   // debugger;
   const [movie_name, setMovieName] = useState("");
   const [movie_id, setMovieId] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [likes, setLikes] = useState(0);
-  const [views, setViews] = useState(0);
+	const [views, setViews] = useState(0);
+  const [countShow, setCountShow] = useState(0);
+  const [friends, setFriends] = useState([]);
+  let room = "";
   // const [data, setData] = useState({});
   useEffect(() => {
     function fetchDetail() {
@@ -155,21 +57,74 @@ const Watch = (props) => {
         .catch(err => console.log("Sorry, can't fetch movie detail!", err));
     }
     fetchDetail();
-  }, []);
+  }, [u_id]);
+  
+  let socket;
+	
+	// Helper Methods
+	const connect = e => {
+    setCountShow(2);
+
+    socket.emit("send_invite", {
+      link: window.location.href,
+      name: "Me",
+      movie: movie_name
+    });
+	};
+
+	const disconnect = e => {
+		// setShowFriends(true);
+		// setShowChat(false);
+    setCountShow(1);
+	};
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    alert("Sent!");
+  };
+
+  const createRoom = () => {
+    axios
+      .all([
+        axios.post(`https://movie-stream-api.herokuapp.com/api/create/room/for/${u_id}`, {
+          "token": localStorage.getItem("token")
+        }),
+        axios.post("https://movie-stream-api.herokuapp.com/api/my/friends", {
+          "token": localStorage.getItem("token")
+        })
+      ])
+      .then(axios.spread((rm, frnd) => {
+        // console.log("Room: ", res.data.message);
+        setRoomId(rm.data.message.split(" ")[1]);
+        room = rm.data.message.split(" ")[1];
+        setFriends(frnd.data.data);
+        // console.log(res.data.message.split(" ")[1]);
+        setCountShow(1);
+        // socket = io.connect(`https://movie-stream-api.herokuapp.com/api/home`, { rejectUnauthorized: false });
+        socket = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${room}`, { rejectUnauthorized: false });
+        socket.on("connect", () => console.log("Connected", socket));
+        socket.on("resp", obj => console.log(obj));
+      }))
+    .catch(err => console.log("Sorry an error occured creating room", err));
+  };
+
+  const startVideoCall = e => {
+
+  };
 
   const SimilarMovies = () => {
     // fetch data from api using u_id
     // console.log("Props Id: " + props.id);
     const [movies, setMovies] = useState([]);
-    const [movie_length, setMoviesLength] = useState(0);
+    // const [movie_length, setMoviesLength] = useState(0);
     useEffect(() => {
       const GetSimilarMovies = async () => {
         try {
           const res = await axios.get("https://movie-stream-api.herokuapp.com/api/similar/movie/"+ movie_id);
-          console.log("Similar Movies: ", res);
+          // console.log("Similar Movies: ", res);
           // set the value of similarMovies variable to the response
           setMovies(res.data.data);
-          setMoviesLength(res.data.data.length);
+          // setMoviesLength(res.data.data.length);
         } catch (err) {
           console.log(err);
         }
@@ -183,11 +138,32 @@ const Watch = (props) => {
               {/* {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />)} */}
             </div>
           </div>
-  };
+	};
+	
+	// Friends component
+	const Friend = ({ pic, name, address }) => {
+		const imgStyle = {};
+		return (
+			<div className="friend">
+				<div className="imgFrame">
+					<img src={pic} alt="." style={imgStyle} />
+				</div>
+				<div className="detail">
+					<h3>{name}</h3>
+					<p>
+						<a href="/#">{address}</a>
+						<button className="connectBtn" onClick={() => connect(name)}>Connect</button>
+					</p>
+				</div>
+			</div>
+		);
+	};
 
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   return (
     <div className="watch">
+      {/* {
+        !data.logged_in ? <Redirect to="/signin" /> : null
+      } */}
       <AppNavBar />
       <div className="watch-body">
         <div className="movieShow">
@@ -202,28 +178,18 @@ const Watch = (props) => {
                 className="theShow"
               /> */}
               <video 
-<<<<<<< HEAD
-                // poster={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}.jpg`}
-=======
                 poster={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}.jpg`}
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
                 autoPlay={true}
                 controls={true}
                 className="theShow"
               >
-<<<<<<< HEAD
-                {/* <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/webm"/>
-                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/mp4"/>
-                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/ogg"/> */}
-=======
                 <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/webm"/>
                 <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/mp4"/>
                 <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/ogg"/>
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
               </video>
             </div>
             <div className="actions">
-              {/* <p className="title">{movie_name}</p> */}
+              <p className="title">{movie_name}</p>
               <div className="btns">
                 <div>
                   <FaHeart className="icons" /> <br />
@@ -235,7 +201,7 @@ const Watch = (props) => {
                 </div>
                 <div>
                   <FaPlus className="icons" /> <br />
-                  <span>Add to list</span>
+                  <span>List</span>
                 </div>
               </div>
             </div>
@@ -248,10 +214,95 @@ const Watch = (props) => {
                   <FaStar />
                   <FaStar />
                 </div>
-              </div>
+            </div>
           </div>
-          <div>
-            Hello world
+          <div className="room">
+            {
+              countShow === 0 ? (
+                <>
+                  <div className="connect">
+                    <header className="center">Connect with friends</header>
+                    <button onClick={createRoom}>Create Room</button>
+                  </div>
+                </>
+              ) : null
+            }
+
+						{
+							countShow === 1 ? (
+								<>
+									<header>
+										<h3 className="center">Friends</h3>
+									</header>
+									<div className="friends">
+                    { friends && friends.map(i => (
+                      <Friend 
+                        pic={Joker}
+                        name={i.name}
+                        address={`@${i.name}`}
+                        status={true}
+                        title={""}
+                      />
+                    ))}
+										{/* <Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/> */}
+									</div>
+								</>
+							) : null
+						}
+						{
+							countShow === 2 ? (
+								<div className="chat">
+									<header>
+										<div>
+                			<FaArrowLeft size={20} color="white" onClick={disconnect} />
+											<span>Jane</span>
+										</div>
+										<img src={logo} alt="." onClick={startVideoCall} />
+									</header>
+									<div className="chatBoard">
+										{/* The chat */}
+									</div>
+                  <form onSubmit={handleSubmit}>
+                    <input type="text" className="inp" placeholder="Message" />
+                    <button type="submit">Send</button>
+                  </form>
+								</div>
+							) : null
+						}
           </div>
         </div>
         <div className="others">

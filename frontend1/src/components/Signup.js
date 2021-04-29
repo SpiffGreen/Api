@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../AuthContext";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -23,7 +22,7 @@ const Nav = () => {
   );
 }
 
-function Signup(props) {
+function Signup() {
   const [form, updateForm] = useState({
     firstName: "",
     lastName: "",
@@ -34,8 +33,6 @@ function Signup(props) {
     password2: "",
     number: "",
   });
-
-  const { isAuthenticated } = useContext(AuthContext);
   
   const [registered, setRegistered] = useState(false);
   
@@ -131,19 +128,19 @@ function Signup(props) {
         console.log(res);
         if(res.data.status === "success") {
           setRegistered(true);
-          props.history.push("/signin");
         }
       })
       .catch(err => {
         console.log("Signup attempt failed\n", err);
         // Update UI telling user registration failed
       })
+
   }
 
   const [count, setCount] = useState(1);
   return (
     <div className="sign-body">
-      {isAuthenticated.token ? <Redirect to="/" /> : null}
+      {registered ? <Redirect to="/signin" /> : null}
       <Nav />
       <div className="main">
         <form onSubmit={submit}>

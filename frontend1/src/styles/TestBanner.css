@@ -1,3 +1,8 @@
+/* I had some issues with the banner nav */
+.slick-dots li {
+  display: none !important;
+}
+
 .slick-dots li button {
   padding: 0 !important;
   background: white !important;
@@ -40,10 +45,7 @@ ul.slick-dots {
 /* Details Styling */
 .details {
   background-position: top;
-<<<<<<< HEAD
-=======
   /* background-size: cover; */
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
   background-size: 100% 150%;
   background-repeat: no-repeat;
   width: 100%;

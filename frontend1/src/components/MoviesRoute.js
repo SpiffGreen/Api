@@ -14,7 +14,7 @@ const MoviesRoute = (props) => {
     <div className="mvpage">
       <AppNavBar />
       <Banner />
-      <Watching />
+      {/* <Watching /> */}
       <Recommendations />
       <MoviesSection />
       <SubscribeLayout />

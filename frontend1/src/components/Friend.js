@@ -1,5 +1,6 @@
 import React from "react";
 import { IoVideocamOutline } from "react-icons/io5";
+import axios from "axios";
 
 // smaller Components
 const Offline = () => {
@@ -70,6 +71,23 @@ function Friend({ avatar, name, status, title, into }) {
   const h3Styles = {
     "margin": "0 0 6px 6px"
   }
+
+  const addBtnStyle = {
+    "backgroundColor": "var(--apps-red)",
+    "padding": "2px 8px",
+    "border": "none",
+    "borderRadius": "3px",
+    "outline": "none",
+    "float": "right"
+  };
+
+  const addFriend = async () => {
+    const result = await axios.post(encodeURI(`https://movie-stream-api.herokuapp.com/api/add/friend/${name}`), {
+      token: localStorage.getItem("token"),
+    });
+    console.log(result);
+  }
+
   return (
     <div style={mainStyle}>
       <div className="avatar" style={avatarStyle}>
@@ -77,9 +95,9 @@ function Friend({ avatar, name, status, title, into }) {
         {status ? <Live /> : <Offline /> }
       </div>
       <div className="details" style={detailsStyles}>
-        <h3 style={h3Styles}>{ name }</h3>
-        <p style={pStyles}>{ status ? "Now Playing" : "Into" }</p>
-        <span style={statusStyles}>{ status ? title : into }</span>
+        <h3 style={h3Styles}>{ name.split(" ")[0] }</h3>
+        <p style={pStyles}>{ status ? "Now Playing" : "Into" } <button className="addFriendBtn" style={addBtnStyle} onClick={addFriend}>Add</button></p>
+        <p><span style={statusStyles}>{ status ? title : into }</span></p>
       </div>
     </div>
   );

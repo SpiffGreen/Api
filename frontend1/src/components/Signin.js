@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
-// import { MovieContext } from "../MovieContext";
-import { AuthContext } from "../AuthContext";
+import { MovieContext } from "../MovieContext";
 import { Link, Redirect } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import "../styles/Signin.css";
 import axios from "axios";
 import urls from "../apiEndPoints";
+// import RouteProtect from "./RouteProtect";
 
 const Nav = () => {
   return (
@@ -30,7 +30,7 @@ function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember] = useState(true);
-  const {isAuthenticated, setAuth} = useContext(AuthContext);
+  const [state, updateState] = useContext(MovieContext);
 
   
   const updateEmail = (e) => {
@@ -53,25 +53,6 @@ function Signin() {
     axios.post(urls.login, body)
       .then(res => {
         const data = res.data;
-<<<<<<< HEAD
-        if(data.status === "success") {
-          // Store token in local storage
-          localStorage.setItem("token", data.token);
-          // console.log(localStorage.getItem("token"));
-          setAuth(n => {
-            return {
-              ...n,
-              token: data.token
-            }
-          })
-          console.log(isAuthenticated);
-        } else {
-        // update UI telling user that login failed.
-        console.log("Resquest went through but returned: ", res);
-        // console.log(data.token);
-        localStorage.setItem("token", data.token);
-        }
-=======
         console.log(data);
         localStorage.setItem("token", data.token);
         updateState(n => {
@@ -81,7 +62,6 @@ function Signin() {
           };
         });
         console.log(state);
->>>>>>> c6fb155287c03fa2a9bf8bf1ba54c9263150f328
       })
       .catch(err => {
         // update UI telling user that login failed.
@@ -91,7 +71,8 @@ function Signin() {
 
   return (
     <div className="sign-body">
-      {isAuthenticated.token ? <Redirect to="/" /> : null}
+      {/* <RouteProtect /> */}
+      {state.logged_in ? <Redirect to="/" /> : null}
       <Nav />
       <div className="main">
         {count === 1 ? (
@@ -110,10 +91,7 @@ function Signin() {
                 value={email}
                 onChange={updateEmail}
               />
-              <button 
-                className="sign-sub-btn"
-                onClick={() => setCount(count + 1)}
-              >
+              <button onClick={() => setCount(count + 1)}>
                 <FaArrowRight size={24} color="var(--font-color)" />
               </button>
             </div>
@@ -139,11 +117,10 @@ function Signin() {
                 maxLength={16}
                 value={password}
                 onChange={updatePassword}
-              />
+              /><br />
               
               <button
-                className="sign-sub-btn"
-                style={{ fontSize: "22px", color: "var(--font-color)"}}
+                style={{ fontSize: "22px", color: "var(--font-color)" }}
                 onClick={submit}
               >
                 Login
