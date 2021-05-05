@@ -12,10 +12,10 @@ const Notification = () => {
     socket.emit("online", { name: "Me" });
   });
 
-  // socket.on("resp", (resp_data) => {
-  //   // alert("Resp");
-  //   console.log("Resp: ", resp_data);
-  // });
+  socket.on("resp", (resp_data) => {
+    // alert("Resp");
+    console.log("Resp: ", resp_data);
+  });
 
   // socket.onAny((ev) => console.log("Events: ", ev));
 

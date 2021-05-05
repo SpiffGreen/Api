@@ -51,7 +51,7 @@ const Details = ({ year, genre, time, review, movieName, desc, link }) => {
 export default function Banner() {
   const [movies, setMovies] = useState([]);
 
-  useEffect(() => () => {
+  useEffect(() => {
     axios.get(urls.trending)
       .then(res => {
         setMovies(res.data.data.slice(0, 3));
