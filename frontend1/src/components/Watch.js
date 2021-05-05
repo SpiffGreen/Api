@@ -30,7 +30,7 @@ import axios from "axios";
 
 const Watch = (props) => {
   const { match } = props;
-  console.log("This is the movie_id: ", match.params.movie_id);
+  // console.log("This is the movie_id: ", match.params.movie_id);
   const u_id = match.params.movie_id;
   // debugger;
   const [movie_name, setMovieName] = useState("");
@@ -40,7 +40,7 @@ const Watch = (props) => {
 	const [views, setViews] = useState(0);
   const [countShow, setCountShow] = useState(0);
   const [friends, setFriends] = useState([]);
-  let room = "";
+  // let room = "";
   // const [data, setData] = useState({});
   useEffect(() => {
     function fetchDetail() {
@@ -48,7 +48,7 @@ const Watch = (props) => {
         "token": localStorage.getItem("token"),
       })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           setMovieName(res.data.data.name);
           setMovieId(res.data.data.public_id);
           setLikes(res.data.data.thumbs_up);
@@ -59,15 +59,14 @@ const Watch = (props) => {
     fetchDetail();
   }, [u_id]);
   
-  let socket;
+  const [sock, setSock] = useState();
 	
 	// Helper Methods
-	const connect = e => {
+	const connect = name => {
     setCountShow(2);
 
-    socket.emit("send_invite", {
-      link: window.location.href,
-      name: "Me",
+    sock.emit("send_invite", {
+      link: name,
       movie: movie_name
     });
 	};
@@ -96,14 +95,14 @@ const Watch = (props) => {
       .then(axios.spread((rm, frnd) => {
         // console.log("Room: ", res.data.message);
         setRoomId(rm.data.message.split(" ")[1]);
-        room = rm.data.message.split(" ")[1];
+        // room = rm.data.message.split(" ")[1];
         setFriends(frnd.data.data);
         // console.log(res.data.message.split(" ")[1]);
         setCountShow(1);
         // socket = io.connect(`https://movie-stream-api.herokuapp.com/api/home`, { rejectUnauthorized: false });
-        socket = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${room}`, { rejectUnauthorized: false });
-        socket.on("connect", () => console.log("Connected", socket));
-        socket.on("resp", obj => console.log(obj));
+        setSock(io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`, { rejectUnauthorized: false }));
+        sock.on("connect", () => console.log("Connected", sock));
+        sock.on("resp", obj => console.log("Resp: ", obj));
       }))
     .catch(err => console.log("Sorry an error occured creating room", err));
   };
@@ -238,8 +237,8 @@ const Watch = (props) => {
                     { friends && friends.map(i => (
                       <Friend 
                         pic={Joker}
-                        name={i.name}
-                        address={`@${i.name}`}
+                        name={i.u_friend}
+                        address={`@${i.u_friend}`}
                         status={true}
                         title={""}
                       />

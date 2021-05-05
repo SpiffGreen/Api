@@ -67,7 +67,7 @@ const Recommendations = (props) => {
         "token": localStorage.getItem("token")
       })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           setMovies(res.data.data);
         })
     }

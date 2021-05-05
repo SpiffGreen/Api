@@ -37,7 +37,7 @@ const AppNavBar = (props) => {
   useEffect(() => {
     axios("https://movie-stream-api.herokuapp.com/api/users")
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         setPersons(res.data);
       })
       .catch(() => console.log("Couldn't Get Persons"));
@@ -116,7 +116,7 @@ const AppNavBar = (props) => {
         </div>
 
         <div className="friend-results">
-          {persons && persons.map((i, idx) => (<Friend avatar={Joker} name={i.name} status={true} title={i.country} />))}
+          {persons && persons.map((i, idx) => (<Friend key={idx} avatar={Joker} name={i.name} status={true} title={i.country} />))}
           {/* <Friend
             avatar={Joker}
             name="Nonso"
