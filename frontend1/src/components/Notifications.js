@@ -6,15 +6,23 @@ const Notification = () => {
   const [note, setNote] = useState({});
   const [view, setView] = useState(false);
   useEffect( () => {
-  const socket = io.connect("https://movie-stream-api.herokuapp.com/api/home");
+  const socket = io.connect("https://movie-stream-api.herokuapp.com");
   console.log(socket);
-  socket.on("connect", (ev) => {
+  socket.on("connection", (ev) => {
     socket.emit("online", { name: "Me" });
   });
 
   socket.on("resp", (resp_data) => {
     // alert("Resp");
     console.log("Resp: ", resp_data);
+  });
+
+  socket.on("status_change", (data) => {
+    console.log("Status Changed: ", data);
+  });
+
+  socket.emit("online", {
+    name: "Spiff Jekey-Green"
   });
 
   // socket.onAny((ev) => console.log("Events: ", ev));

@@ -59,7 +59,7 @@ const Watch = (props) => {
     fetchDetail();
   }, [u_id]);
   
-  const [sock, setSock] = useState();
+  const [sock, setSock] = useState(io);
 	
 	// Helper Methods
 	const connect = name => {
@@ -100,9 +100,11 @@ const Watch = (props) => {
         // console.log(res.data.message.split(" ")[1]);
         setCountShow(1);
         // socket = io.connect(`https://movie-stream-api.herokuapp.com/api/home`, { rejectUnauthorized: false });
-        setSock(io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`, { rejectUnauthorized: false }));
-        sock.on("connect", () => console.log("Connected", sock));
-        sock.on("resp", obj => console.log("Resp: ", obj));
+        // console.log(sock);
+        const roomSock = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
+        console.log(roomSock);
+        roomSock.on("connect", () => console.log("Connected To room sock ", roomSock));
+        roomSock.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
       }))
     .catch(err => console.log("Sorry an error occured creating room", err));
   };
@@ -234,8 +236,9 @@ const Watch = (props) => {
 										<h3 className="center">Friends</h3>
 									</header>
 									<div className="friends">
-                    { friends && friends.map(i => (
-                      <Friend 
+                    { friends && friends.map((i, idx) => (
+                      <Friend
+                        key={idx}
                         pic={Joker}
                         name={i.u_friend}
                         address={`@${i.u_friend}`}
