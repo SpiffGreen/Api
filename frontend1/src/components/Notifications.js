@@ -7,8 +7,9 @@ const Notification = () => {
   const [view, setView] = useState(false);
   useEffect( () => {
   const socket = io.connect("https://movie-stream-api.herokuapp.com");
+  // const socket = {on: function(){}, emit: function() {}};
   console.log(socket);
-  socket.on("connection", (ev) => {
+  socket.on("connect", (ev) => {
     socket.emit("online", { name: "Me" });
   });
 
@@ -38,7 +39,7 @@ const Notification = () => {
   return view ? (
     <div className="notif">
       <p>Notification <button onClick={() => setView(false)}>close</button></p>
-      <a href={`movies-stream-api.herokuapp.com/watch/${note.movie_id}`}>{note.name} invited you to watch {note.movie}</a>
+      <a href={`/watch/${note.movie_id}`}>{note.name} invited you to watch {note.movie}</a>
     </div>
   ) : null;
 };

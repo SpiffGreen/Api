@@ -59,14 +59,16 @@ const Watch = (props) => {
     fetchDetail();
   }, [u_id]);
   
-  const [sock, setSock] = useState(io);
+  // const [sock, setSock] = useState(null);
+  let sock = null;
 	
 	// Helper Methods
 	const connect = name => {
     setCountShow(2);
 
     sock.emit("send_invite", {
-      link: name,
+      link: window.location.href,
+      name: name,
       movie: movie_name
     });
 	};
@@ -99,12 +101,10 @@ const Watch = (props) => {
         setFriends(frnd.data.data);
         // console.log(res.data.message.split(" ")[1]);
         setCountShow(1);
-        // socket = io.connect(`https://movie-stream-api.herokuapp.com/api/home`, { rejectUnauthorized: false });
-        // console.log(sock);
-        const roomSock = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
-        console.log(roomSock);
-        roomSock.on("connect", () => console.log("Connected To room sock ", roomSock));
-        roomSock.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
+        sock = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
+        console.log(sock);
+        sock.on("connect", () => console.log("Connected To room sock ", sock));
+        sock.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
       }))
     .catch(err => console.log("Sorry an error occured creating room", err));
   };
@@ -121,7 +121,7 @@ const Watch = (props) => {
     useEffect(() => {
       const GetSimilarMovies = async () => {
         try {
-          const res = await axios.get("https://movie-stream-api.herokuapp.com/api/similar/movie/"+ movie_id);
+          const res = await axios(`https://movie-stream-api.herokuapp.com/api/similar/movie/${movie_id}`);
           // console.log("Similar Movies: ", res);
           // set the value of similarMovies variable to the response
           setMovies(res.data.data);
@@ -136,7 +136,11 @@ const Watch = (props) => {
     return <div className="recommended">
             {/* <p className="title">{ movies.length != 0 ? "You might also like" : null }</p> */}
             <div className="show">
-              {/* {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />)} */}
+              {/* {Array.isArray(movies) ? {
+                movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />
+               } : {
+                 <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />
+                }} */}
             </div>
           </div>
 	};
