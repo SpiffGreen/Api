@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/Watch.css";
 import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
@@ -59,18 +59,18 @@ const Watch = (props) => {
     fetchDetail();
   }, [u_id]);
   
-  // const [sock, setSock] = useState(null);
-  let sock = null;
+  const sock = useRef();
+  // let sock = {};
 	
 	// Helper Methods
 	const connect = name => {
     setCountShow(2);
 
-    sock.emit("send_invite", {
+    sock.current.emit("send_invite", {
       link: window.location.href,
       name: name,
       movie: movie_name
-    });
+    }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
 	};
 
 	const disconnect = e => {
@@ -101,10 +101,10 @@ const Watch = (props) => {
         setFriends(frnd.data.data);
         // console.log(res.data.message.split(" ")[1]);
         setCountShow(1);
-        sock = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
+        sock.current = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
         console.log(sock);
-        sock.on("connect", () => console.log("Connected To room sock ", sock));
-        sock.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
+        sock.current.on("connect", () => console.log("Connected To room sock ", sock.current));
+        sock.current.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
       }))
     .catch(err => console.log("Sorry an error occured creating room", err));
   };

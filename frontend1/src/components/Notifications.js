@@ -30,7 +30,7 @@ const Notification = () => {
 
   socket.on("Invited", (data) => {
     // data-> link, name, movie
-    console.log(data);
+    console.log("Invited: ", data);
     setNote(data);
     setView(true);
   })
