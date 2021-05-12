@@ -223,12 +223,12 @@ const AppNavBar = (props) => {
               <TiArrowSortedDown onClick={() => setTurn(n => !n)} className="nav-arrows movie-arrow" style={{ "transform": turn ? "scaleY(-1)" : "scaleY(1)" }}/>
               <div className="other" style={{display: !turn ? "none" : "block"}}>
                 <Link to="/movies"><p className="active-mobile"><MdMovie className="icons" />Movies</p></Link>
-                <Link><p><AiFillDatabase className="icons" /> Series</p></Link>
-                <Link><p><FaMixcloud className="icons" /> Live</p></Link>
+                <Link to="/"><p><AiFillDatabase className="icons" /> Series</p></Link>
+                <Link to="/"><p><FaMixcloud className="icons" /> Live</p></Link>
               </div>
             </div>
 
-            <Link>
+            <Link to="/">
               <div className="My List">
                 <div className="details">
                   <h3>My List</h3>
@@ -238,7 +238,7 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-            <Link>
+            <Link to="/">
               <div className="Settings">
                 <div className="details">
                   <h3>Settings</h3>
@@ -248,7 +248,7 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-            <Link>
+            <Link to="/">
               <div className="Friend Request">
                 <div className="details">
                   <h3>Friend Request</h3>
@@ -258,7 +258,7 @@ const AppNavBar = (props) => {
               </div>
             </Link>
 
-            <Link>
+            <Link to="">
               <div className="Logout" onClick={logout}>
                 <div className="details">
                   <h3>Logout</h3>
