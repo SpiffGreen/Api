@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 import { MovieProvider } from "./MovieContext";
+import { NotificationProvider } from "./NotificationContext";
 import Home from "./components/Home";
 import User from "./components/User";
 import Watch from "./components/Watch";
@@ -14,6 +15,7 @@ import NotFoundPage from "./components/NotFound";
 class App extends Component {
   render() {
     return (
+      <NotificationProvider>
       <MovieProvider>
         <Router>
           <div className="App">
@@ -29,6 +31,7 @@ class App extends Component {
           </div>
         </Router>
       </MovieProvider>
+      </NotificationProvider>
     );
   }
 }

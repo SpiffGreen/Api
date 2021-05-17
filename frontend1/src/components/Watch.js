@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "../styles/Watch.css";
 import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
@@ -11,6 +11,7 @@ import logo from "../video-camera.svg";
 import io from "socket.io-client";
 
 import axios from "axios";
+import { NotificationContext } from "../NotificationContext";
 // import { GoPrimitiveDot } from "react-icons/go";
 // import urls from "../apiEndPoints";
 
@@ -40,6 +41,7 @@ const Watch = (props) => {
 	const [views, setViews] = useState(0);
   const [countShow, setCountShow] = useState(0);
   const [friends, setFriends] = useState([]);
+  const { notify, setNotify } = useContext(NotificationContext);
   // let room = "";
   // const [data, setData] = useState({});
   useEffect(() => {
@@ -66,11 +68,17 @@ const Watch = (props) => {
 	const connect = name => {
     setCountShow(2);
 
-    sock.current.emit("send_invite", {
-      link: window.location.href,
-      name: name,
-      movie: movie_name
-    }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
+    // sock.current.emit("send_invite", {
+    //   link: window.location.href,
+    //   name: name,
+    //   movie: movie_name
+    // }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
+
+    setNotify({
+      val: true,
+      user: name,
+      movie_name: movie_name
+    });
 	};
 
 	const disconnect = e => {
