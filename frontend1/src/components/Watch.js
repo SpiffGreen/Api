@@ -46,7 +46,7 @@ const Watch = (props) => {
   // const [data, setData] = useState({});
   useEffect(() => {
     function fetchDetail() {
-      axios.post(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`, {
+      axios.post(`${window.location.protocol}//movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`, {
         "token": localStorage.getItem("token"),
       })
         .then(res => {
@@ -126,20 +126,20 @@ const Watch = (props) => {
     // console.log("Props Id: " + props.id);
     const [movies, setMovies] = useState([]);
     // const [movie_length, setMoviesLength] = useState(0);
-    useEffect(() => {
-      const GetSimilarMovies = async () => {
-        try {
-          const res = await axios(`https://movie-stream-api.herokuapp.com/api/similar/movie/${movie_id}`);
-          // console.log("Similar Movies: ", res);
-          // set the value of similarMovies variable to the response
-          setMovies(res.data.data);
-          // setMoviesLength(res.data.data.length);
-        } catch (err) {
-          console.log(err);
-        }
-      };
-      GetSimilarMovies();
-    }, []);
+    // useEffect(() => {
+    //   const GetSimilarMovies = async () => {
+    //     try {
+    //       const res = await axios(`https://movie-stream-api.herokuapp.com/api/similar/movie/${movie_id}`);
+    //       // console.log("Similar Movies: ", res);
+    //       // set the value of similarMovies variable to the response
+    //       setMovies(res.data.data);
+    //       // setMoviesLength(res.data.data.length);
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   };
+    //   GetSimilarMovies();
+    // }, []);
   
     return <div className="recommended">
             {/* <p className="title">{ movies.length != 0 ? "You might also like" : null }</p> */}

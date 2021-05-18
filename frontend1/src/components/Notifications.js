@@ -26,7 +26,7 @@ const Notification = () => {
   }, [notify]);
 
   useEffect( () => {
-  socket.current = io.connect("https://movie-stream-api.herokuapp.com");
+  socket.current = io.connect(window.location.protocol + "//movie-stream-api.herokuapp.com/");
   // const socket = {on: function(){}, emit: function() {}};
   console.log(socket);
   socket.current.on("connect", (ev) => {
