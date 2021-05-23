@@ -68,11 +68,11 @@ const Watch = (props) => {
 	const connect = name => {
     setCountShow(2);
 
-    // sock.current.emit("send_invite", {
-    //   link: window.location.href,
-    //   name: name,
-    //   movie: movie_name
-    // }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
+    sock.current.emit("send_invite", {
+      link: window.location.href,
+      name: name,
+      movie: movie_name
+    }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
 
     setNotify({
       val: true,

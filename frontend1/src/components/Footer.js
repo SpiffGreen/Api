@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer>
       <>
-        <Notification />
+        {/* <Notification /> */}
         <div className="logo">Filba</div>
         <FooterNav />
         <div className="copyrights">&copy; All rights reserved copyright {(new Date()).getFullYear()}</div>
