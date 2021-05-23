@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 // import axios from "axios";
 import io from "socket.io-client";
 import { NotificationContext } from '../NotificationContext';
+import { FaTimes } from "react-icons/fa";
+import "../styles/Notification.css";
 
 const Notification = () => {
   const [note, setNote] = useState({});
@@ -12,7 +14,7 @@ const Notification = () => {
 
   useEffect(() => {
     if(notify.val) {
-      socket.current.emit("Invited",  {
+      socket.current.emit("send_invite",  {
         link: window.location.href,
         name: notify.user,
         movie: notify.movie_name
@@ -23,6 +25,7 @@ const Notification = () => {
         });
       })
     }
+    // eslint-disable-next-line
   }, [notify]);
 
   useEffect( () => {
@@ -58,8 +61,9 @@ const Notification = () => {
   }, []);
   return view ? (
     <div className="notif">
-      <p>Notification <button onClick={() => setView(false)}>close</button></p>
-      <a href={`/watch/${note.movie_id}`}>{note.name} invited you to watch {note.movie}</a>
+      <div class="inner">
+        <p><a href={`/watch/${note.movie_id}`}>{note.name} invited you to watch {note.movie}</a> <FaTimes onClick={() => setView(false)} color="#eee" className="close" /></p>
+      </div>
     </div>
   ) : null;
 };

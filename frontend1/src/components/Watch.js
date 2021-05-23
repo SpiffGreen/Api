@@ -4,7 +4,7 @@ import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
 import Footer from "./Footer";
 import Joker from "../joker_movie.jpg";
-import MovieCard from "./MovieCard";
+// import MovieCard from "./MovieCard";
 // import ReactPlayer from "react-player";
 import { FaEye, FaHeart, FaPlus, FaStar, FaArrowLeft } from "react-icons/fa";
 import logo from "../video-camera.svg";
@@ -41,7 +41,7 @@ const Watch = (props) => {
 	const [views, setViews] = useState(0);
   const [countShow, setCountShow] = useState(0);
   const [friends, setFriends] = useState([]);
-  const { notify, setNotify } = useContext(NotificationContext);
+  const { setNotify } = useContext(NotificationContext);
   // let room = "";
   // const [data, setData] = useState({});
   useEffect(() => {
@@ -68,12 +68,12 @@ const Watch = (props) => {
 	const connect = name => {
     setCountShow(2);
 
-    sock.current.emit("send_invite", {
-      link: window.location.href,
-      name: name,
-      movie: movie_name
-    }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
-
+    // sock.current.emit("send_invite", {
+    //   link: window.location.href,
+    //   name: name,
+    //   movie: movie_name
+    // }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
+    
     setNotify({
       val: true,
       user: name,
@@ -124,7 +124,7 @@ const Watch = (props) => {
   const SimilarMovies = () => {
     // fetch data from api using u_id
     // console.log("Props Id: " + props.id);
-    const [movies, setMovies] = useState([]);
+    // const [movies, setMovies] = useState([]);
     // const [movie_length, setMoviesLength] = useState(0);
     // useEffect(() => {
     //   const GetSimilarMovies = async () => {

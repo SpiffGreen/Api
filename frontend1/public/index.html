@@ -22,12 +22,26 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script>
-      const socket = io.connect(window.location.protocol + "//movie-stream-api.herokuapp.com/");
-      socket.on("connect", () => {
-        console.log("connected to socket html");
-      });
+      // const socket = io.connect(window.location.protocol + "//movie-stream-api.herokuapp.com/");
+      // socket.on("connect", () => {
+      //   console.log("connected to socket html");
+      //   socket.emit("online", { name: "Me" });
+      // });
 
-      socket.on("resp", (data) => console.log("Resp from html", data));
+      // socket.on("status_change", (data) => {
+      //   console.log("Status Changed: ", data);
+      // });
+
+      // socket.emit("online", {
+      //   name: "Spiff Jekey-Green"
+      // });
+
+      // socket.on("Invited", (data) => {
+      //   // data-> link, name, movie
+      //   console.log("Invited: ", data);
+      // });
+
+      // socket.on("resp", (data) => console.log("Resp from html", data));
     </script>
   </body>
 </html>

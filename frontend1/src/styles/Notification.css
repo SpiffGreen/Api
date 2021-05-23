@@ -1,0 +1,28 @@
+.notif {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    /* background: red; */
+}
+
+.notif .inner {
+    transform: translateY(-10px);
+    width: 95%;
+    height: auto;
+    padding: 15px 10px;
+    background: var(--apps-grey);
+    color: white;
+    border-radius: 5px;
+}
+
+.notif .inner p {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notif .inner p > .close {
+    cursor: pointer;
+}
