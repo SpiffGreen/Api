@@ -15,7 +15,7 @@ const Notification = () => {
   useEffect(() => {
     if(notify.val) {
       socket.current.emit("send_invite",  {
-        link: window.location.href,
+        // link: window.location.href,
         name: notify.user,
         movie: notify.movie_name
       }, () => {
@@ -62,7 +62,7 @@ const Notification = () => {
   return view ? (
     <div className="notif">
       <div class="inner">
-        <p><a href={`/watch/${note.movie_id}`}>{note.name} invited you to watch {note.movie}</a> <FaTimes onClick={() => setView(false)} color="#eee" className="close" /></p>
+        <p><a href={`/watch/${note.movie_id}`}>{note.sender} invited you to watch {note.movie}</a> <FaTimes onClick={() => setView(false)} color="#eee" className="close" /></p>
       </div>
     </div>
   ) : null;
