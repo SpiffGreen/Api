@@ -8,6 +8,7 @@ import Joker from "../joker_movie.jpg";
 // import ReactPlayer from "react-player";
 import { FaEye, FaHeart, FaPlus, FaStar, FaArrowLeft } from "react-icons/fa";
 import logo from "../video-camera.svg";
+import Peer from "simple-peer";
 import io from "socket.io-client";
 
 import axios from "axios";
@@ -33,10 +34,15 @@ const Watch = (props) => {
   const { match } = props;
   // console.log("This is the movie_id: ", match.params.movie_id);
   const u_id = match.params.movie_id;
-  // debugger;
+  const movie_id = useRef();
+  const url = new URL(window.location.href);
+  const isInvited = useRef();
+  isInvited.current = url.searchParams.get("invited") === null ? false : true;
+  movie_id.current = url.searchParams.get("movie_id");
+  const sock = useRef();
+  
   const [movie_name, setMovieName] = useState("");
-  const [movie_id, setMovieId] = useState("");
-  const [roomId, setRoomId] = useState("");
+  const roomId = useRef();
   const [likes, setLikes] = useState(0);
 	const [views, setViews] = useState(0);
   const [countShow, setCountShow] = useState(0);
@@ -44,6 +50,16 @@ const Watch = (props) => {
   const { setNotify } = useContext(NotificationContext);
   // let room = "";
   // const [data, setData] = useState({});
+  // if(isInvited === true) {
+  //   setCountShow(2);
+  // }
+
+  useEffect(() => {
+    if(isInvited.current === true) {
+      setCountShow(2);
+
+    }
+  }, []);
   useEffect(() => {
     function fetchDetail() {
       axios.post(`${window.location.protocol}//movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`, {
@@ -52,7 +68,7 @@ const Watch = (props) => {
         .then(res => {
           // console.log(res.data);
           setMovieName(res.data.data.name);
-          setMovieId(res.data.data.public_id);
+          if(isInvited.current === false) movie_id.current =  res.data.data.public_id;
           setLikes(res.data.data.thumbs_up);
           setViews(res.data.data.popular);
         })
@@ -61,23 +77,16 @@ const Watch = (props) => {
     fetchDetail();
   }, [u_id]);
   
-  const sock = useRef();
-  // let sock = {};
 	
 	// Helper Methods
 	const connect = name => {
     setCountShow(2);
-
-    // sock.current.emit("send_invite", {
-    //   link: window.location.href,
-    //   name: name,
-    //   movie: movie_name
-    // }, () => console.log(`Sent invite for ${movie_name} to ${name}`));
-    
     setNotify({
       val: true,
       user: name,
-      movie_name: movie_name
+      movie_name: movie_name,
+      room_id: roomId.current,
+      movie_id: movie_id.current
     });
 	};
 
@@ -104,13 +113,13 @@ const Watch = (props) => {
       ])
       .then(axios.spread((rm, frnd) => {
         // console.log("Room: ", res.data.message);
-        setRoomId(rm.data.message.split(" ")[1]);
+        roomId.current = rm.data.message.split(" ")[1];
         // room = rm.data.message.split(" ")[1];
         setFriends(frnd.data.data);
         // console.log(res.data.message.split(" ")[1]);
         setCountShow(1);
-        sock.current = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id}/in/room/${roomId}`);
-        console.log(sock);
+        sock.current = io.connect(`https://movie-stream-api.herokuapp.com/api/watch/${movie_id.current}/in/room/${roomId.current}`);
+        // console.log(sock);
         sock.current.on("connect", () => console.log("Connected To room sock ", sock.current));
         sock.current.on("resp", obj => console.log("Resp: Inside watch movie ", obj));
       }))
@@ -174,9 +183,6 @@ const Watch = (props) => {
 
   return (
     <div className="watch">
-      {/* {
-        !data.logged_in ? <Redirect to="/signin" /> : null
-      } */}
       <AppNavBar />
       <div className="watch-body">
         <div className="movieShow">
@@ -258,41 +264,6 @@ const Watch = (props) => {
                         title={""}
                       />
                     ))}
-										{/* <Friend 
-											pic={Joker}
-											name="Jane"
-											address="@jane1553"
-											status={true}
-											title="The Avengers"
-										/>
-										<Friend 
-											pic={Joker}
-											name="Jane"
-											address="@jane1553"
-											status={true}
-											title="The Avengers"
-										/>
-										<Friend 
-											pic={Joker}
-											name="Jane"
-											address="@jane1553"
-											status={true}
-											title="The Avengers"
-										/>
-										<Friend 
-											pic={Joker}
-											name="Jane"
-											address="@jane1553"
-											status={true}
-											title="The Avengers"
-										/>
-										<Friend 
-											pic={Joker}
-											name="Jane"
-											address="@jane1553"
-											status={true}
-											title="The Avengers"
-										/> */}
 									</div>
 								</>
 							) : null

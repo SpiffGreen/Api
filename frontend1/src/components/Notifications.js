@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Link } from "react-router-dom";
 // import axios from "axios";
 import io from "socket.io-client";
 import { NotificationContext } from '../NotificationContext';
@@ -14,16 +15,19 @@ const Notification = () => {
 
   useEffect(() => {
     if(notify.val) {
+      console.log(notify);
       socket.current.emit("send_invite",  {
-        // link: window.location.href,
+        link: window.location.href,
         name: notify.user,
-        movie: notify.movie_name
+        movie: notify.movie_name,
+        room_id: notify.room_id,
+        movie_id: notify.movie_id
       }, () => {
         console.log(`Sent invite for ${notify.movie_name} to ${notify.user}`);
         setNotify(prev => {
           return {...prev, val: false};
         });
-      })
+      });
     }
     // eslint-disable-next-line
   }, [notify]);
@@ -53,16 +57,16 @@ const Notification = () => {
 
   socket.current.on("Invited", (data) => {
     // data-> link, name, movie
-    console.log("Invited: ", data);
-    setNote(data);
+    console.log("Invited: ", data.data);
+    setNotify(data.data);
     setView(true);
   })
   
   }, []);
   return view ? (
     <div className="notif">
-      <div class="inner">
-        <p><a href={`/watch/${note.movie_id}`}>{note.sender} invited you to watch {note.movie}</a> <FaTimes onClick={() => setView(false)} color="#eee" className="close" /></p>
+      <div className="inner">
+        <p><Link to={(new URL(notify.link)).pathname + `?invited=true&movie_id=${notify.movie_id}&room_id=${notify.room_id}`}>{notify.name} invited you to watch {notify.movie}</Link> <FaTimes onClick={() => setView(false)} color="#eee" className="close" /></p>
       </div>
     </div>
   ) : null;
